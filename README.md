@@ -144,8 +144,8 @@ FFMPEG_PATH=
 ENABLE_EVAL_EXEC=false
 
 # Nama paket dan pembuat stiker default
-STICKER_PACK=WhatsApp Bot
-STICKER_AUTHOR=Antigravity
+STICKER_PACK=LMAO
+STICKER_AUTHOR=Boe BOT
 ```
 
 ---

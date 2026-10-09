@@ -21,7 +21,14 @@ export const defaultUserRecord = (jid) => ({
   lastSeen: Date.now(),
   registeredAt: Date.now(),
   isBanned: false,
-  isPremium: false
+  isPremium: false,
+  balance: 1000,
+  lastDaily: 0,
+  gachaTokens: 5,
+  lastTokenClaim: 0,
+  race: 'Manusia Biasa',
+  raceRarity: 'Common',
+  inventoryRaces: []
 });
 
 export const defaultGroupRecord = (jid) => ({

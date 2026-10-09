@@ -17,6 +17,37 @@ class Database {
     if (!data.users[jid]) {
       data.users[jid] = defaultUserRecord(jid);
       this.adapter.setData(data);
+    } else {
+      let updated = false;
+      if (typeof data.users[jid].balance !== 'number') {
+        data.users[jid].balance = 1000;
+        updated = true;
+      }
+      if (typeof data.users[jid].lastDaily !== 'number') {
+        data.users[jid].lastDaily = 0;
+        updated = true;
+      }
+      if (typeof data.users[jid].gachaTokens !== 'number') {
+        data.users[jid].gachaTokens = 5;
+        updated = true;
+      }
+      if (typeof data.users[jid].lastTokenClaim !== 'number') {
+        data.users[jid].lastTokenClaim = 0;
+        updated = true;
+      }
+      if (!data.users[jid].race) {
+        data.users[jid].race = 'Manusia Biasa';
+        updated = true;
+      }
+      if (!data.users[jid].raceRarity) {
+        data.users[jid].raceRarity = 'Common';
+        updated = true;
+      }
+      if (!Array.isArray(data.users[jid].inventoryRaces)) {
+        data.users[jid].inventoryRaces = [];
+        updated = true;
+      }
+      if (updated) this.adapter.setData(data);
     }
     return data.users[jid];
   }

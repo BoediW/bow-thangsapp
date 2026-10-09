@@ -46,19 +46,42 @@ export function injectExif(webpBuffer, exifBuffer) {
   // Look for existing EXIF chunk and strip it
   let offset = 12;
   const chunks = [];
+  let vp8xFound = false;
+
   while (offset < webpBuffer.length) {
     const chunkHeader = webpBuffer.toString('utf-8', offset, offset + 4);
     const chunkSize = webpBuffer.readUInt32LE(offset + 4);
     const paddedSize = chunkSize + (chunkSize % 2);
 
-    if (chunkHeader !== 'Exif') {
+    if (chunkHeader === 'VP8X') {
+      vp8xFound = true;
+      const vp8xChunk = webpBuffer.subarray(offset, offset + 8 + paddedSize);
+      // Set EXIF flag (bit 3) in the VP8X flags (byte 8)
+      vp8xChunk[8] |= 0x08;
+      chunks.push(vp8xChunk);
+    } else if (chunkHeader !== 'EXIF') {
       chunks.push(webpBuffer.subarray(offset, offset + 8 + paddedSize));
     }
     offset += 8 + paddedSize;
   }
 
+  if (!vp8xFound) {
+    // Create a new VP8X chunk since the image didn't have one.
+    // We know all our stickers are strictly 512x512.
+    // 512 - 1 = 511 (0x01FF in little endian: FF 01 00)
+    const vp8xChunk = Buffer.from([
+      0x56, 0x50, 0x38, 0x58, // 'VP8X'
+      0x0A, 0x00, 0x00, 0x00, // Size: 10
+      0x08,                   // Flags: EXIF (bit 3)
+      0x00, 0x00, 0x00,       // Reserved
+      0xFF, 0x01, 0x00,       // Canvas Width - 1 (511)
+      0xFF, 0x01, 0x00        // Canvas Height - 1 (511)
+    ]);
+    chunks.unshift(vp8xChunk);
+  }
+
   // Construct new EXIF chunk
-  const exifChunkHeader = Buffer.from('Exif');
+  const exifChunkHeader = Buffer.from('EXIF');
   const exifChunkSize = Buffer.alloc(4);
   exifChunkSize.writeUInt32LE(exifBuffer.length, 0);
   const padding = exifBuffer.length % 2 === 1 ? Buffer.alloc(1) : Buffer.alloc(0);

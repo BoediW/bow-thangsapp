@@ -47,22 +47,40 @@ export function cleanJid(jid) {
  * @returns {string}
  */
 export function buildMenuText({ botName, userName, prefix, runtime, categories }) {
-  let text = `╭───「 ${botName.toUpperCase()} 」───╮\n`;
+  const categoryIcons = {
+    general: '🌐 GENERAL',
+    sticker: '🎨 STICKER',
+    media: '🎬 MEDIA',
+    downloader: '📥 DOWNLOADER',
+    fun: '🎮 FUN & GAMES',
+    group: '👥 GROUP MANAGEMENT',
+    owner: '👑 OWNER ONLY'
+  };
+
+  let totalCmds = 0;
+  for (const cmds of Object.values(categories)) {
+    totalCmds += cmds.length;
+  }
+
+  let text = `╭───「 *${botName.toUpperCase()}* 」───╮\n`;
   text += `│\n`;
-  text += `│ 👤 User : ${userName}\n`;
-  text += `│ ⚡ Prefix : ${prefix}\n`;
-  text += `│ ⏱ Runtime : ${runtime}\n`;
+  text += `│ 👤 *User* : ${userName}\n`;
+  text += `│ ⚡ *Prefix* : [ ${prefix} ]\n`;
+  text += `│ ⏱ *Uptime* : ${runtime}\n`;
+  text += `│ 📦 *Total Command* : ${totalCmds}\n`;
   text += `│\n`;
 
   for (const [category, commands] of Object.entries(categories)) {
-    text += `├── ${category.toUpperCase()}\n`;
+    if (!commands || commands.length === 0) continue;
+    const catTitle = categoryIcons[category.toLowerCase()] || `📌 ${category.toUpperCase()}`;
+    text += `├── 「 *${catTitle}* 」\n`;
     for (const cmd of commands) {
-      text += `│ • ${prefix}${cmd.name}${cmd.usage ? ` ${cmd.usage}` : ''}\n`;
+      text += `│ • *${prefix}${cmd.name}* ${cmd.usage ? `_${cmd.usage}_` : ''}\n`;
     }
     text += `│\n`;
   }
 
-  text += `└───────────────────────`;
+  text += `╰───────────────────────`;
   return text;
 }
 

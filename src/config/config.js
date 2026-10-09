@@ -20,8 +20,8 @@ function normalizeOwnerJids(rawOwnerNumbers) {
 export const config = Object.freeze({
   rootDir,
   botName: process.env.BOT_NAME || 'MyWhatsAppBot',
-  ownerNumbers: normalizeOwnerJids(process.env.OWNER_NUMBER || '6281234567890'),
-  rawOwnerNumber: process.env.OWNER_NUMBER || '6281234567890',
+  ownerNumbers: normalizeOwnerJids(process.env.OWNER_NUMBER || '6285173080632'),
+  rawOwnerNumber: process.env.OWNER_NUMBER || '6285173080632',
   defaultPrefix: process.env.PREFIX || '!',
   maxFileSizeMB: parseInt(process.env.MAX_FILE_SIZE, 10) || 50,
   tempDir: path.resolve(rootDir, process.env.TEMP_DIR || './temp'),

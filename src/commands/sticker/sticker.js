@@ -28,8 +28,11 @@ export default {
       return await reply('Kirim gambar/video pendek dengan caption *!sticker* atau reply gambar/video yang sudah ada.');
     }
 
-    if (isVideo && targetMsg.seconds > 10) {
-      return await reply('⚠️ Durasi video terlalu panjang. Maksimal 10 detik untuk stiker animasi.');
+    if (isVideo) {
+      const seconds = inner.videoMessage?.seconds || 0;
+      if (seconds > 10) {
+        return await reply('⚠️ Durasi video terlalu panjang. Maksimal 10 detik untuk stiker animasi.');
+      }
     }
 
     if (!mediaLimits.acquireSlot()) {

@@ -12,7 +12,7 @@ export default {
   botAdminOnly: true,
   async execute({ sock, msg, text, reply }) {
     if (!text) {
-      return await reply('Format: *!add 6281234567890*');
+      return await reply('Format: *!add 6285173080632*');
     }
 
     const cleanNumber = text.replace(/[^0-9]/g, '');
